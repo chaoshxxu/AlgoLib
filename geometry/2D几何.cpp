@@ -66,7 +66,7 @@ pt its(pt a, pt b, pt c, pt d) {
 //计算多边形外角和,逆时针为正
 double angsum(pt p[], int n) {
 	double ret = 0, tmp;
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		pt &A = p[i], &B = p[(i+1)%n], &C = p[(i+2)%n];
 		tmp = PI - acos(dpr(B, A, C) / dis(A, B) / dis(B, C));
@@ -80,7 +80,7 @@ double angsum(pt p[], int n) {
 //判定凸多边形,顶点按顺时针或逆时针给出,允许相邻边共线(n>=3)
 int is_convex(pt p[], int n) {
 	int s[3] = {1,1,1};
-	for (int i = 0; i<n && s[1]|s[2]; i++)
+	for (int i = 0; i<n && s[1]|s[2]; ++i)
 		s[_sign(cpr(p[i], p[(i+1)%n], p[(i+2)%n]))] = 0;
 	return s[1]|s[2];
 }
@@ -88,7 +88,7 @@ int is_convex(pt p[], int n) {
 //判定凸多边形,顶点按顺时针或逆时针给出,不允许相邻边共线
 int is_convex_v2(pt p[], int n) {
 	int s[3] = {1,1,1};
-	for (int i = 0; i<n && s[0] && s[1]|s[2]; i++)
+	for (int i = 0; i<n && s[0] && s[1]|s[2]; ++i)
 		s[_sign(cpr(p[i], p[(i+1)%n], p[(i+2)%n]))] = 0;
 	return s[0] && s[1]|s[2];
 }
@@ -96,7 +96,7 @@ int is_convex_v2(pt p[], int n) {
 //判点在凸多边形内或多边形边上,顶点按顺时针或逆时针给出
 int inside_convex(pt q, pt p[], int n) {
 	int s[3] = {1,1,1};
-	for (int i = 0; i<n && s[1]|s[2]; i++)
+	for (int i = 0; i<n && s[1]|s[2]; ++i)
 		s[_sign(cpr(p[i], p[(i+1)%n],q))] = 0;
 	return s[1]|s[2];
 }
@@ -104,7 +104,7 @@ int inside_convex(pt q, pt p[], int n) {
 //判点在凸多边形内,顶点按顺时针或逆时针给出,在多边形边上返回0
 int inside_convex_v2(pt q, pt p[], int n) {
 	int s[3] = {1,1,1};
-	for (int i = 0; i<n && s[0] && s[1]|s[2]; i++)
+	for (int i = 0; i<n && s[0] && s[1]|s[2]; ++i)
 		s[_sign(cpr(p[i], p[(i+1)%n],q))] = 0;
 	return s[0] && s[1]|s[2];
 }
@@ -113,7 +113,7 @@ int inside_convex_v2(pt q, pt p[], int n) {
 pt barycenter(int n, pt *p) {
 	pt ret(0, 0), t;
 	double t1 = 0, t2;
-	for (int i = 1; i < n - 1; i++)
+	for (int i = 1; i < n - 1; ++i)
 	{
 		if (fabs(t2 = cpr(p[i+1], p[0], p[i])) > eps)
 		{
@@ -135,7 +135,7 @@ pt barycenter(int n, pt *p) {
 void half_its(pt &a, pt &b, pt pol[], int &polcnt, pt exch[]) {
 	int i, p2 = 0;
 	bool now, last = cpr(a, b, pol[polcnt-1]) > -eps;
-	for (i = 0; i < polcnt; i++)
+	for (i = 0; i < polcnt; ++i)
 	{
 		now = cpr(a, b, pol[i]) > -eps;
 		if (now ^ last)
@@ -145,7 +145,7 @@ void half_its(pt &a, pt &b, pt pol[], int &polcnt, pt exch[]) {
 		last = now;
 	}
 	polcnt = p2;
-	for (i = 0; i < p2; i++)
+	for (i = 0; i < p2; ++i)
 		pol[i] = exch[i];
 }
 
@@ -259,9 +259,9 @@ pt fermentpoint(pt a, pt b, pt c) {
 	u.y = (a.y+b.y+c.y)/3;
 	while (step > 1e-10)
 	{
-		for (k = 0; k < 10; step/=2, k++)
-		for (i = -1; i <= 1; i++)
-		for (j = -1; j <= 1; j++)
+		for (k = 0; k < 10; step/=2, ++k)
+		for (i = -1; i <= 1; ++i)
+		for (j = -1; j <= 1; ++j)
 		{
 			v.x = u.x + step*i;
 			v.y = u.y + step*j;
@@ -324,7 +324,7 @@ void tangent2(pt c1, double r1, pt c2, double r2, double &t1, double &t2) {
 void make_ch(pt *p, pt *f, int n, int &top) {
 	top = 0;
 	sort(p, p + n);
-	for (int i = 0; i < 2*n-1; i++)
+	for (int i = 0; i < 2*n-1; ++i)
 	{
 		int j = (i < n) ? i : 2*(n-1)-i;
 		while (top > 1 && cpr(f[top-2], f[top-1], p[j]) < -eps)
@@ -339,7 +339,7 @@ void make_ch(pt *p, pt *f, int n, int &top) {
 void make_ch(pt *p, int *s, int n, int &top) {
 	top = 0;
 	sort(p, p + n);
-	for (int i = 0; i < 2*n-1; i++)
+	for (int i = 0; i < 2*n-1; ++i)
 	{
 		int j = (i < n) ? i : 2*(n-1)-i;
 		while (top > 1 && cpr(p[s[top-2]], p[s[top-1]], p[j]) < -eps)
